@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>خمن لاعب دوري روشن</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header class="topbar">
+        <div class="header-content">
+            <div class="logo">⚽ روشن</div>
+
+            <div class="header-actions">
+
+                <button class="icon-button"
+                 title="الإحصائيات"
+                 onclick="openStats()">
+                 📊
+                </button>
+                
+            </div>
+        </div>
+    </header>
+
+    <main class="game-container">
+
+        <section class="game-header">
+            <h1>خمن لاعب دوري روشن</h1>
+
+            <p class="challenge">
+                تحدي اليوم
+                <span>#<span id="challengeNumber"></span></span>
+            </p>
+        </section>
+
+
+        <section class="search-section">
+
+            <div class="search-area">
+
+                <div class="input-wrapper">
+
+                    <input
+                        type="text"
+                        id="playerInput"
+                        placeholder="ابحث عن لاعب..."
+                        autocomplete="off"
+                    >
+
+                    <div
+                        id="suggestions"
+                        class="suggestions">
+                    </div>
+
+                </div>
+
+                <button
+                    class="guess-button"
+                    onclick="makeGuess()">
+                    تخمين
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <div class="attempts-bar">
+
+            <span>المحاولات</span>
+
+            <strong id="attempts">
+                0 / 6
+            </strong>
+
+        </div>
+
+
+        <section id="result"></section>
+
+
+        <button
+            id="shareButton"
+            class="share-button"
+            onclick="shareResult()"
+            style="display: none;">
+            مشاركة النتيجة
+        </button>
+
+           <div id="endCard" class="end-card" style="display: none;">
+
+           <div class="end-icon" id="endIcon">🎉</div>
+
+           <h2 id="endTitle">أحسنت!</h2>
+
+           <p id="endMessage"></p>
+
+           <div class="answer-card">
+           <span>لاعب اليوم</span>
+           <strong id="answerName"></strong>
+           </div>
+
+            <div class="next-challenge">
+            <span>التحدي القادم بعد</span>
+            <strong id="countdown">--:--:--</strong>
+            </div>
+
+            </div>
+
+            <!-- نافذة الإحصائيات -->
+<div id="statsModal" class="stats-modal">
+    <div class="stats-box">
+
+        <button class="close-stats" onclick="closeStats()">×</button>
+
+        <h2>📊 إحصائياتك</h2>
+
+        <div class="stats-grid">
+
+            <div class="stat-item">
+                <strong id="gamesPlayed">0</strong>
+                <span>لعبت</span>
+            </div>
+
+            <div class="stat-item">
+                <strong id="winPercentage">0%</strong>
+                <span>نسبة الفوز</span>
+            </div>
+
+            <div class="stat-item">
+                <strong id="currentStreak">0</strong>
+                <span>السلسلة الحالية</span>
+            </div>
+
+            <div class="stat-item">
+                <strong id="maxStreak">0</strong>
+                <span>أفضل سلسلة</span>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+    </main>
+
+
+    <footer>
+        لعبة يومية لعشاق دوري روشن
+    </footer>
+
+
+    <script src="players.js"></script>
+    <script src="script.js"></script>
+
+</body>
+</html>
