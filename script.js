@@ -395,7 +395,9 @@ function buildShareText() {
 
 ${emojiRows}
 
-${score}`;
+${score}
+
+https://rawshaniat.com`;
 }
 
 async function shareResult() {
