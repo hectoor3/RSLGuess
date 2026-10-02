@@ -1,404 +1,623 @@
-const seasonSlider = document.getElementById("seasonSlider");
-const seasonDisplay = document.getElementById("seasonDisplay");
-const minusBtn = document.getElementById("minusBtn");
-const plusBtn = document.getElementById("plusBtn");
-const submitBtn = document.getElementById("submitBtn");
-const currentClipDisplay = document.getElementById("currentClip");
-const gameMedia = document.getElementById("gameMedia");
-
-const answerReveal = document.getElementById("answerReveal");
-const yourAnswer = document.getElementById("yourAnswer");
-const correctAnswer = document.getElementById("correctAnswer");
-const pointsEarned = document.getElementById("pointsEarned");
-const nextClipBtn = document.getElementById("nextClipBtn");
-
-let currentClip = 0;
-let totalScore = 0;
-let answers = [];
-let preloadedVideo = null;
-
-const startSeason = 2008;
-const endSeason = 2026;
-
-const challengeStartDate = new Date("2026-10-02T00:00:00+03:00");
-
-function getChallengeNumber() {
-    const now = new Date();
-
-    const startDay = Date.UTC(
-        challengeStartDate.getFullYear(),
-        challengeStartDate.getMonth(),
-        challengeStartDate.getDate()
-    );
-
-    const today = Date.UTC(
-        now.getFullYear(),
-        now.getMonth(),
-        now.getDate()
-    );
-
-    const daysPassed = Math.floor((today - startDay) / 86400000);
-
-    return daysPassed + 1;
-}
-
-const challengeNumber = getChallengeNumber();
-const clips = dailyClips[challengeNumber];
-
-const storageKey = `seasonChallenge-${challengeNumber}`;
-
-function calculatePoints(guess, correct) {
-    const difference = Math.abs(guess - correct);
-
-    if (difference === 0) return 3;
-    if (difference === 1) return 2;
-    if (difference === 2) return 1;
-
-    return 0;
-}
-
-function formatSeason(year) {
-    const nextYear = String(year + 1).slice(-2);
-    return `${year}/${nextYear}`;
-}
-
-function loadClip() {
-    gameMedia.src = clips[currentClip].media;
-    gameMedia.load();
-
-    preloadNextClip();
-}
-
-function preloadNextClip() {
-    const nextClipIndex = currentClip + 1;
-
-    if (nextClipIndex >= clips.length) {
-        preloadedVideo = null;
-        return;
-    }
-
-    preloadedVideo = document.createElement("video");
-    preloadedVideo.preload = "auto";
-    preloadedVideo.src = clips[nextClipIndex].media;
-    preloadedVideo.load();
-}
-
-function updateSeason() {
-    const year = Number(seasonSlider.value);
-    seasonDisplay.textContent = formatSeason(year);
-}
-
-minusBtn.addEventListener("click", () => {
-    if (Number(seasonSlider.value) > startSeason) {
-        seasonSlider.value--;
-        updateSeason();
-    }
-});
-
-plusBtn.addEventListener("click", () => {
-    if (Number(seasonSlider.value) < endSeason) {
-        seasonSlider.value++;
-        updateSeason();
-    }
-});
-
-seasonSlider.addEventListener("input", updateSeason);
-
-updateSeason();
-loadClip();
-
-submitBtn.addEventListener("click", () => {
-    const guess = Number(seasonSlider.value);
-    const correct = clips[currentClip].season;
-
-    // مؤقتًا: إذا ما حطينا موسم اللقطة للحين
-    if (correct === null) {
-        console.log("موسم اللقطة غير محدد بعد");
-        return;
-    }
-
-    const points = calculatePoints(guess, correct);
-
-    const progressItems = document.querySelectorAll(".progress-item");
-
-if (points === 3) {
-    progressItems[currentClip].classList.add("correct");
-} else if (points === 2) {
-    progressItems[currentClip].classList.add("close");
-} else if (points === 1) {
-    progressItems[currentClip].classList.add("near");
-} else {
-    progressItems[currentClip].classList.add("wrong");
-}
-
-    answers.push({
-        guess: guess,
-        correct: correct,
-        points: points
-    });
-
-    totalScore += points;
-
-    yourAnswer.textContent = formatSeason(guess);
-correctAnswer.textContent = formatSeason(correct);
-
-pointsEarned.textContent = `+${points} نقطة`;
-
-pointsEarned.classList.remove("correct", "close", "near", "wrong");
-
-if (points === 3) {
-    pointsEarned.classList.add("correct");
-} else if (points === 2) {
-    pointsEarned.classList.add("close");
-} else if (points === 1) {
-    pointsEarned.classList.add("near");
-} else {
-    pointsEarned.classList.add("wrong");
-}
-
-answerReveal.style.display = "block";
-
-submitBtn.style.display = "none";
-seasonSlider.disabled = true;
-minusBtn.disabled = true;
-plusBtn.disabled = true;
-
-gameMedia.pause();
-
-localStorage.setItem(storageKey, JSON.stringify({
-    currentClip: currentClip,
-    totalScore: totalScore,
-    answers: answers,
-    awaitingNext: true
-}));
-
-});
-
-nextClipBtn.addEventListener("click", () => {
-    currentClip++;
-
-    localStorage.setItem(storageKey, JSON.stringify({
-    currentClip: currentClip,
-    totalScore: totalScore,
-    answers: answers,
-    awaitingNext: false
-}));
-
-    if (currentClip < clips.length) {
-        currentClipDisplay.textContent = currentClip + 1;
-
-        seasonSlider.value = 2017;
-        updateSeason();
-
-        answerReveal.style.display = "none";
-        submitBtn.style.display = "block";
-
-        seasonSlider.disabled = false;
-        minusBtn.disabled = false;
-        plusBtn.disabled = false;
-
-        loadClip();
-    } else {
-        const clipCard = document.querySelector(".clip-card");
-        const resultScreen = document.getElementById("resultScreen");
-        const finalScore = document.getElementById("finalScore");
-
-        clipCard.style.display = "none";
-        resultScreen.style.display = "block";
-        finalScore.textContent = totalScore;
-
-        const resultColors = document.getElementById("resultColors");
-        resultColors.innerHTML = "";
-
-        answers.forEach(answer => {
-            const box = document.createElement("div");
-            box.classList.add("result-color");
-
-           if (answer.points === 3) {
-    box.classList.add("correct");
-} else if (answer.points === 2) {
-    box.classList.add("close");
-} else if (answer.points === 1) {
-    box.classList.add("near");
-} else {
-    box.classList.add("wrong");
-}
-
-            resultColors.appendChild(box);
-        });
-
-        const resultDetails = document.getElementById("resultDetails");
-        resultDetails.innerHTML = "";
-
-        answers.forEach((answer, index) => {
-            const row = document.createElement("div");
-            row.classList.add("result-row");
-
-            row.textContent =
-                `${index + 1}. ${formatSeason(answer.correct)} — إجابتك ${formatSeason(answer.guess)}`;
-
-            resultDetails.appendChild(row);
-        });
-    }
-});
-
-const copyResultBtn = document.getElementById("copyResultBtn");
-
-copyResultBtn.addEventListener("click", async () => {
-   const resultSquares = answers.map(answer => {
-    if (answer.points === 3) return "🟩";
-    if (answer.points === 2) return "🟨";
-    if (answer.points === 1) return "🟧";
-    return "⬛";
-}).join("");
-
-   const shareText =
-`أي موسم؟ #${challengeNumber}
-
-${totalScore}/12
-${resultSquares}
-
-rawshaniat.com`;
-
-    await navigator.clipboard.writeText(shareText);
-
-    copyResultBtn.textContent = "تم النسخ ✓";
-
-    setTimeout(() => {
-        copyResultBtn.textContent = "نسخ النتيجة";
-    }, 2000);
-});
-
-function restoreGame() {
-    const savedGame = localStorage.getItem(storageKey);
-
-    if (!savedGame) return;
-
-    const savedData = JSON.parse(savedGame);
-
-    currentClip = savedData.currentClip;
-    totalScore = savedData.totalScore;
-    answers = savedData.answers;
-
-    if (savedData.awaitingNext && answers.length > 0) {
-    const lastAnswer = answers[answers.length - 1];
-
-    yourAnswer.textContent = formatSeason(lastAnswer.guess);
-    correctAnswer.textContent = formatSeason(lastAnswer.correct);
-
-    pointsEarned.textContent = `+${lastAnswer.points} نقطة`;
-
-    pointsEarned.classList.remove("correct", "close", "near", "wrong");
-
-if (lastAnswer.points === 3) {
-    pointsEarned.classList.add("correct");
-} else if (lastAnswer.points === 2) {
-    pointsEarned.classList.add("close");
-} else if (lastAnswer.points === 1) {
-    pointsEarned.classList.add("near");
-} else {
-    pointsEarned.classList.add("wrong");
-}
-
-    answerReveal.style.display = "block";
-    submitBtn.style.display = "none";
-
-    seasonSlider.disabled = true;
-    minusBtn.disabled = true;
-    plusBtn.disabled = true;
-
-    gameMedia.pause();
-
-    return;
-}
-
-    const progressItems = document.querySelectorAll(".progress-item");
-
-    answers.forEach((answer, index) => {
-        if (answer.points === 3) {
-            progressItems[index].classList.add("correct");
-        } else if (answer.points === 2) {
-            progressItems[index].classList.add("close");
-        } else {
-            progressItems[index].classList.add("wrong");
+// تاريخ بداية اللعبة حسب تقويم السعودية
+const startDate = {
+    year: 2026,
+    month: 9,
+    day: 28
+};
+
+// جلب التاريخ الحالي حسب توقيت السعودية
+function getSaudiDateParts() {
+
+    const parts = new Intl.DateTimeFormat("en-US", {
+        timeZone: "Asia/Riyadh",
+        year: "numeric",
+        month: "numeric",
+        day: "numeric"
+    }).formatToParts(new Date());
+
+    const values = {};
+
+    parts.forEach(part => {
+        if (part.type !== "literal") {
+            values[part.type] = Number(part.value);
         }
     });
 
-if (currentClip < clips.length) {
-    currentClipDisplay.textContent = currentClip + 1;
-    loadClip();} 
+    return values;
+}
+
+const saudiToday = getSaudiDateParts();
+
+const startDayUTC = Date.UTC(
+    startDate.year,
+    startDate.month - 1,
+    startDate.day
+);
+
+const todayDayUTC = Date.UTC(
+    saudiToday.year,
+    saudiToday.month - 1,
+    saudiToday.day
+);
+
+const daysSinceStart = Math.floor(
+    (todayDayUTC - startDayUTC) / 86400000
+);
+
+// رقم تحدي اليوم
+const challengeNumber = daysSinceStart + 1;
+
+// اختيار لاعب اليوم
+const dailyPlayerId = dailyChallenges[daysSinceStart];
+
+const targetPlayer = players.find(
+    player => player.id === dailyPlayerId
+);
+
+if (!targetPlayer) {
+    throw new Error(
+        `لا يوجد لاعب محدد للتحدي #${challengeNumber}`
+    );
+}
+
+// عرض رقم التحدي
+document.getElementById("challengeNumber").textContent =
+    String(challengeNumber).padStart(3, "0");
+
+const storageKey = `rslGuess_${challengeNumber}`;
+
+let gameState = JSON.parse(localStorage.getItem(storageKey)) || {
+    guesses: [],
+    finished: false
+};
+
+let attempts = gameState.guesses.length;
+const maxAttempts = 6;
+
+function makeGuess() {
+    const input = document.getElementById("playerInput");
+    const playerName = input.value.trim();
+
+    if (playerName === "") {
+        return;
+    }
+
+    const guessedPlayer = players.find(
+        player => player.name === playerName
+    );
+
+    if (!guessedPlayer) {
+        document.getElementById("result").innerHTML =
+            "<p>⚠️ اللاعب غير موجود في القائمة</p>";
+        return;
+    }
+
+    // منع تخمين نفس اللاعب مرتين
+    const alreadyGuessed = gameState.guesses.includes(guessedPlayer.id);
+
+    if (alreadyGuessed) {
+        alert("سبق وخمنت هذا اللاعب");
+        input.value = "";
+        return;
+    }
+
+    if (attempts >= maxAttempts) {
+        return;
+    }
+
+    attempts++;
+
+    gameState.guesses.push(guessedPlayer.id);
+
+    document.getElementById("attempts").textContent =
+        `المحاولات: ${attempts} / ${maxAttempts}`;
+
+    showGuess(guessedPlayer);
+
+    input.value = "";
+}
+
+function calculateAge(birthDate) {
+    const today = new Date();
+    const birth = new Date(birthDate);
+
+    let age = today.getFullYear() - birth.getFullYear();
+
+    const monthDifference =
+        today.getMonth() - birth.getMonth();
+
+    if (
+        monthDifference < 0 ||
+        (monthDifference === 0 &&
+            today.getDate() < birth.getDate())
+    ) {
+        age--;
+    }
+
+    return age;
+}
+
+function showGuess(player, restoring = false) {
+
+    const club = compareText(player.club, targetPlayer.club);
+    const nationality = compareText(
+        player.nationality,
+        targetPlayer.nationality
+    );
+    const position = compareText(
+        player.position,
+        targetPlayer.position
+    );
+    const foot = compareText(player.foot, targetPlayer.foot);
+
+    const playerAge = calculateAge(player.birthDate);
+    const targetAge = calculateAge(targetPlayer.birthDate);
+
+    const age = compareNumber(playerAge, targetAge);
+    const height = compareNumber(player.height, targetPlayer.height);
     
-    else {
-    const clipCard = document.querySelector(".clip-card");
-    const resultScreen = document.getElementById("resultScreen");
-    const finalScore = document.getElementById("finalScore");
-    const resultColors = document.getElementById("resultColors");
-    const resultDetails = document.getElementById("resultDetails");
 
-    clipCard.style.display = "none";
-    resultScreen.style.display = "block";
-    finalScore.textContent = totalScore;
+    const result = document.getElementById("result");
 
-    resultColors.innerHTML = "";
-    resultDetails.innerHTML = "";
+    result.innerHTML += `
+        <div class="guess-result">
 
-    answers.forEach((answer, index) => {
-        const box = document.createElement("div");
-        box.classList.add("result-color");
+            <h3>${player.name}</h3>
 
-        if (answer.points === 3) {
-    box.classList.add("correct");
-} else if (answer.points === 2) {
-    box.classList.add("close");
-} else if (answer.points === 1) {
-    box.classList.add("near");
-} else {
-    box.classList.add("wrong");
+            <div class="comparison">
+
+                ${createBox("النادي", player.club, club)}
+                ${createBox("الجنسية", player.nationality, nationality)}
+                ${createBox("المركز", player.position, position)}
+
+                ${createBox(
+                   "العمر",
+                  playerAge,
+                  age.status,
+                   age.arrow
+                 )}
+
+                ${createBox("القدم", player.foot, foot)}
+
+                ${createBox(
+                    "الطول",
+                    player.height + " سم",
+                    height.status,
+                    height.arrow
+                )}
+
+            </div>
+
+        </div>
+    `;
+
+    if (player.name === targetPlayer.name) {
+
+        result.innerHTML += `
+            <h2>🎉 أحسنت! عرفت لاعب اليوم</h2>
+        `;
+
+        document.getElementById("playerInput").disabled = true;
+
+        gameState.finished = true;
+        gameState.won = true;
+         if (!restoring) {
+         recordStats(true);
+                    }
+        saveGame();
+        showEndCard();
+    }
+
+    else if (attempts === maxAttempts) {
+
+        result.innerHTML += `
+            <h2>انتهت المحاولات!</h2>
+            <p>اللاعب هو: ${targetPlayer.name}</p>
+        `;
+
+        document.getElementById("playerInput").disabled = true;
+
+        gameState.finished = true;
+        gameState.won = false;
+         if (!restoring) {
+         recordStats(false);
+                  }
+        saveGame();
+        showEndCard();
+    }
+
+    if (!restoring) {
+    saveGame();
+    }
 }
 
-        resultColors.appendChild(box);
+function compareText(guess, target) {
 
-        const row = document.createElement("div");
-        row.classList.add("result-row");
-        row.textContent =
-            `${index + 1}. ${formatSeason(answer.correct)} — إجابتك ${formatSeason(answer.guess)}`;
+    if (guess === target) {
+        return "correct";
+    }
 
-        resultDetails.appendChild(row);
+    return "wrong";
+}
+
+function compareNumber(guess, target) {
+
+    if (guess === target) {
+        return {
+            status: "correct",
+            arrow: ""
+        };
+    }
+
+    if (guess < target) {
+        return {
+            status: "wrong",
+            arrow: "up"
+        };
+    }
+
+    return {
+        status: "wrong",
+        arrow: "down"
+    };
+}
+
+function createBox(label, value, status, arrow = "") {
+
+    return `
+        <div class="info-box ${status}">
+            <span class="label">${label}</span>
+            <strong>${value}</strong>
+            ${arrow ? `<span class="arrow ${arrow}"></span>` : ""}
+        </div>
+    `;
+}
+
+const playerInput = document.getElementById("playerInput");
+const suggestions = document.getElementById("suggestions");
+
+playerInput.addEventListener("input", function () {
+
+    const searchText = normalizeText(playerInput.value);
+
+    suggestions.innerHTML = "";
+
+    if (searchText.length === 0) {
+        suggestions.style.display = "none";
+        return;
+    }
+
+    const matches = players.filter(player => {
+
+    const normalizedName = normalizeText(player.name);
+
+    const nameMatch = normalizedName.includes(searchText);
+
+    const aliasMatch = player.aliases.some(alias =>
+        normalizeText(alias).includes(searchText)
+    );
+
+    return nameMatch || aliasMatch;
+
     });
-}
+
+    if (matches.length === 0) {
+        suggestions.style.display = "none";
+        return;
+    }
+
+    matches.forEach(player => {
+
+        const item = document.createElement("div");
+
+        item.classList.add("suggestion-item");
+
+        item.innerHTML = `
+            <span class="suggestion-name">
+                ${player.name}
+            </span>
+
+            <span class="suggestion-club">
+                ${player.club}
+            </span>
+        `;
+
+        item.addEventListener("click", function () {
+
+            playerInput.value = player.name;
+
+            suggestions.innerHTML = "";
+            suggestions.style.display = "none";
+
+        });
+
+        suggestions.appendChild(item);
+
+    });
+
+    suggestions.style.display = "block";
+
+});
+
+
+function normalizeText(text) {
+
+    return text
+        .toLowerCase()
+
+        // إزالة التشكيل العربي
+        .replace(/[\u064B-\u065F]/g, "")
+
+        // توحيد أشكال الألف
+        .replace(/[أإآ]/g, "ا")
+
+        // إزالة المسافات الزائدة
+        .trim();
 }
 
-restoreGame();
+function saveGame() {
+    localStorage.setItem(storageKey, JSON.stringify(gameState));
+}
+
+function buildShareText() {
+
+    const emojiRows = gameState.guesses.map(playerId => {
+
+        const player = players.find(p => p.id === playerId);
+
+        if (!player) {
+            return "";
+        }
+
+        const playerAge = calculateAge(player.birthDate);
+        const targetAge = calculateAge(targetPlayer.birthDate);
+
+        const statuses = [
+            compareText(player.club, targetPlayer.club),
+            compareText(player.nationality, targetPlayer.nationality),
+            compareText(player.position, targetPlayer.position),
+            compareNumber(playerAge, targetAge).status,
+            compareText(player.foot, targetPlayer.foot),
+            compareNumber(player.height, targetPlayer.height).status
+        ];
+
+        return statuses
+            .map(status => status === "correct" ? "🟩" : "🟥")
+            .join("");
+
+    }).join("\n");
+
+    const score = gameState.won
+        ? `${gameState.guesses.length}/6 🎯`
+        : "X/6";
+
+    return `⚽ خمن لاعب دوري روشن #${String(challengeNumber).padStart(3, "0")}
+
+${emojiRows}
+
+${score}
+
+https://rawshaniat.com`;
+}
+
+async function shareResult() {
+
+    const text = buildShareText();
+
+    if (navigator.share) {
+
+        try {
+            await navigator.share({
+                title: "خمن لاعب دوري روشن",
+                text: text
+            });
+        } catch (error) {
+            console.log("تم إلغاء المشاركة");
+        }
+
+    } else {
+
+        try {
+            await navigator.clipboard.writeText(text);
+
+            const button =
+                document.getElementById("shareButton");
+
+            const oldText = button.textContent;
+
+            button.textContent = "✅ تم نسخ النتيجة";
+
+            setTimeout(() => {
+                button.textContent = oldText;
+            }, 2000);
+
+        } catch {
+            alert("تعذر نسخ النتيجة");
+        }
+    }
+}
+
+function showEndCard() {
+
+    const endCard = document.getElementById("endCard");
+    const endIcon = document.getElementById("endIcon");
+    const endTitle = document.getElementById("endTitle");
+    const endMessage = document.getElementById("endMessage");
+    const answerName = document.getElementById("answerName");
+
+    endCard.style.display = "block";
+
+    answerName.textContent = targetPlayer.name;
+
+    if (gameState.won) {
+
+        endIcon.textContent = "🎉";
+        endTitle.textContent = "أحسنت!";
+
+        endMessage.textContent =
+            `عرفت لاعب اليوم في ${gameState.guesses.length} محاولات`;
+
+    } else {
+
+        endIcon.textContent = "⚽";
+        endTitle.textContent = "انتهت المحاولات";
+
+        endMessage.textContent =
+            "حظ أوفر في تحدي الغد";
+
+    }
+
+    document.getElementById("shareButton").style.display = "block";
+}
 
 function updateCountdown() {
-    const countdown = document.getElementById("countdown");
 
     const now = new Date();
 
-    // الوقت الحالي في السعودية
-    const saudiNow = new Date(
-        now.toLocaleString("en-US", { timeZone: "Asia/Riyadh" })
+    // منتصف الليل القادم في السعودية
+    const saudiParts = getSaudiDateParts();
+
+    const nextSaudiMidnight = new Date(
+        Date.UTC(
+            saudiParts.year,
+            saudiParts.month - 1,
+            saudiParts.day + 1,
+            -3,
+            0,
+            0
+        )
     );
 
-    // منتصف الليل القادم
-    const nextMidnight = new Date(saudiNow);
-    nextMidnight.setHours(24, 0, 0, 0);
+    let difference = nextSaudiMidnight.getTime() - now.getTime();
 
-    const difference = nextMidnight - saudiNow;
+    if (difference < 0) {
+        difference = 0;
+    }
 
-    const hours = Math.floor(difference / (1000 * 60 * 60));
+    const hours = Math.floor(
+        difference / (1000 * 60 * 60)
+    );
+
     const minutes = Math.floor(
-        (difference % (1000 * 60 * 60)) / (1000 * 60)
-    );
-    const seconds = Math.floor(
-        (difference % (1000 * 60)) / 1000
+        (difference % (1000 * 60 * 60)) /
+        (1000 * 60)
     );
 
-    countdown.textContent =
+    const seconds = Math.floor(
+        (difference % (1000 * 60)) /
+        1000
+    );
+
+    const countdown =
         `${String(hours).padStart(2, "0")}:` +
         `${String(minutes).padStart(2, "0")}:` +
         `${String(seconds).padStart(2, "0")}`;
+
+    const countdownElement =
+        document.getElementById("countdown");
+
+    if (countdownElement) {
+        countdownElement.textContent = countdown;
+    }
 }
 
 updateCountdown();
+
 setInterval(updateCountdown, 1000);
+
+function restoreGame() {
+
+    document.getElementById("attempts").textContent =
+        `المحاولات: ${attempts} / ${maxAttempts}`;
+
+    gameState.guesses.forEach(playerId => {
+
+        const player = players.find(p => p.id === playerId);
+
+        if (player) {
+            showGuess(player, true);
+        }
+
+    });
+
+    if (gameState.finished) {
+
+    document.getElementById("playerInput").disabled = true;
+
+    showEndCard();
+    }
+}
+
+
+// ========================================
+// الإحصائيات
+// ========================================
+
+const statsKey = "rslGuess_stats";
+
+let stats = JSON.parse(localStorage.getItem(statsKey)) || {
+    gamesPlayed: 0,
+    wins: 0,
+    currentStreak: 0,
+    maxStreak: 0
+};
+
+function saveStats() {
+    localStorage.setItem(statsKey, JSON.stringify(stats));
+}
+
+function openStats() {
+    updateStatsDisplay();
+    document.getElementById("statsModal").classList.add("show");
+}
+
+function closeStats() {
+    document.getElementById("statsModal").classList.remove("show");
+}
+
+function updateStatsDisplay() {
+    const winPercentage =
+        stats.gamesPlayed === 0
+            ? 0
+            : Math.round((stats.wins / stats.gamesPlayed) * 100);
+
+    document.getElementById("gamesPlayed").textContent =
+        stats.gamesPlayed;
+
+    document.getElementById("winPercentage").textContent =
+        `${winPercentage}%`;
+
+    document.getElementById("currentStreak").textContent =
+        stats.currentStreak;
+
+    document.getElementById("maxStreak").textContent =
+        stats.maxStreak;
+}
+
+function recordStats(won) {
+
+    // يمنع تسجيل نفس تحدي اليوم مرتين
+    if (gameState.statsRecorded) {
+        return;
+    }
+
+    stats.gamesPlayed++;
+
+    if (won) {
+        stats.wins++;
+        stats.currentStreak++;
+
+        if (stats.currentStreak > stats.maxStreak) {
+            stats.maxStreak = stats.currentStreak;
+        }
+    } else {
+        stats.currentStreak = 0;
+    }
+
+    gameState.statsRecorded = true;
+
+    saveStats();
+    saveGame();
+}
+
+restoreGame();
