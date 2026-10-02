@@ -5,35 +5,121 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>روشنيات</title>
+    <title>أي موسم؟ | روشنيات</title>
 
-    <link rel="icon" type="image/png" href="favicon.png">
-    <link rel="stylesheet" href="home.css">
+    <link rel="icon" type="image/png" href="../favicon.png">
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <header>
-        <h1>روشنيات</h1>
-        <p>ألعاب يومية لعشاق دوري روشن</p>
+    <header class="topbar">
+        <div class="logo">روشنيات</div>
     </header>
 
-    <main>
+    <main class="game-container">
 
-        <a href="guess/" class="game-card">
-            <h2>خمن لاعب دوري روشن</h2>
-            <p>خمّن لاعب اليوم في 6 محاولات</p>
-            <span>العب الآن</span>
-        </a>
+        <section class="game-header">
+            <h1>أي موسم؟</h1>
+            <p>خمّن موسم كل لقطة</p>
 
-        <a href="season/" class="game-card">
-            <h2>أي موسم؟</h2>
-            <p>شاهد 4 لقطات وخمّن الموسم</p>
-            <span>العب الآن</span>
-        </a>
+            <div class="progress">
+                <span class="progress-item active"></span>
+                <span class="progress-item"></span>
+                <span class="progress-item"></span>
+                <span class="progress-item"></span>
+            </div>
+        </section>
+
+        <section class="clip-card">
+
+            <div class="clip-counter">
+                 <span id="currentClip">1</span> / 4
+            </div>
+
+            <div class="media-container">
+              <video id="gameMedia" autoplay muted loop playsinline></video>
+            </div>
+
+            <div class="season-picker">
+
+                <p class="question">أي موسم كانت هذه اللقطة؟</p>
+
+                <div class="season-control">
+    <button id="minusBtn">−</button>
+    <div id="seasonDisplay">2020/21</div>
+    <button id="plusBtn">+</button>
+</div>
+
+<input
+    type="range"
+    id="seasonSlider"
+    min="2008"
+    max="2026"
+    value="2020"
+    step="1"
+>
+
+
+
+<button id="submitBtn" class="submit-btn">تثبيت الإجابة</button>
+
+<div id="answerReveal" class="answer-reveal">
+
+    <div class="reveal-info">
+        <p>
+            إجابتك
+            <strong id="yourAnswer">—</strong>
+        </p>
+
+        <p>
+            الإجابة الصحيحة
+            <strong id="correctAnswer">—</strong>
+        </p>
+    </div>
+
+    <div id="pointsEarned" class="points-earned">
+        +0 نقطة
+    </div>
+
+    <button id="nextClipBtn" class="next-clip-btn">
+        المقطع التالي
+    </button>
+
+</div>
+
+            </div>
+
+        </section>
+
+        <section id="resultScreen" class="result-screen">
+         <h2>نتيجتك</h2>
+
+         <div class="final-score">
+          <span id="finalScore">0</span>
+          <span>/ 12</span>
+         </div>
+
+         <div id="resultColors" class="result-colors"></div>
+
+         <div id="resultDetails" class="result-details"></div>
+
+        <button id="copyResultBtn" class="copy-result-btn">
+                 نسخ النتيجة
+         </button>
+
+         <div class="next-challenge">
+            <p>التحدي القادم بعد</p>
+            <div id="countdown">00:00:00</div>
+         </div>
+
+         <p id="resultMessage"></p>
+       </section>
 
     </main>
 
-</body>
+    <script src="clips.js"></script>
+    <script src="script.js"></script>
 
+</body>
 </html>
