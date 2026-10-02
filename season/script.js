@@ -15,6 +15,7 @@ const nextClipBtn = document.getElementById("nextClipBtn");
 let currentClip = 0;
 let totalScore = 0;
 let answers = [];
+let preloadedVideo = null;
 
 const startSeason = 2008;
 const endSeason = 2026;
@@ -64,6 +65,22 @@ function formatSeason(year) {
 function loadClip() {
     gameMedia.src = clips[currentClip].media;
     gameMedia.load();
+
+    preloadNextClip();
+}
+
+function preloadNextClip() {
+    const nextClipIndex = currentClip + 1;
+
+    if (nextClipIndex >= clips.length) {
+        preloadedVideo = null;
+        return;
+    }
+
+    preloadedVideo = document.createElement("video");
+    preloadedVideo.preload = "auto";
+    preloadedVideo.src = clips[nextClipIndex].media;
+    preloadedVideo.load();
 }
 
 function updateSeason() {
