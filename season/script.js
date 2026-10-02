@@ -6,6 +6,12 @@ const submitBtn = document.getElementById("submitBtn");
 const currentClipDisplay = document.getElementById("currentClip");
 const gameMedia = document.getElementById("gameMedia");
 
+const answerReveal = document.getElementById("answerReveal");
+const yourAnswer = document.getElementById("yourAnswer");
+const correctAnswer = document.getElementById("correctAnswer");
+const pointsEarned = document.getElementById("pointsEarned");
+const nextClipBtn = document.getElementById("nextClipBtn");
+
 let currentClip = 0;
 let totalScore = 0;
 let answers = [];
@@ -112,61 +118,104 @@ if (points === 3) {
     });
 
     totalScore += points;
+
+    yourAnswer.textContent = formatSeason(guess);
+correctAnswer.textContent = formatSeason(correct);
+
+pointsEarned.textContent = `+${points} نقطة`;
+
+pointsEarned.classList.remove("correct", "close", "wrong");
+
+if (points === 3) {
+    pointsEarned.classList.add("correct");
+} else if (points === 2) {
+    pointsEarned.classList.add("close");
+} else {
+    pointsEarned.classList.add("wrong");
+}
+
+answerReveal.style.display = "block";
+
+submitBtn.style.display = "none";
+seasonSlider.disabled = true;
+minusBtn.disabled = true;
+plusBtn.disabled = true;
+
+gameMedia.pause();
+
+localStorage.setItem(storageKey, JSON.stringify({
+    currentClip: currentClip,
+    totalScore: totalScore,
+    answers: answers,
+    awaitingNext: true
+}));
+
+});
+
+nextClipBtn.addEventListener("click", () => {
     currentClip++;
 
     localStorage.setItem(storageKey, JSON.stringify({
     currentClip: currentClip,
     totalScore: totalScore,
-    answers: answers
+    answers: answers,
+    awaitingNext: false
 }));
 
-   if (currentClip < clips.length) {
-    currentClipDisplay.textContent = currentClip + 1;
+    if (currentClip < clips.length) {
+        currentClipDisplay.textContent = currentClip + 1;
 
-    seasonSlider.value = 2017;
-    updateSeason();
+        seasonSlider.value = 2017;
+        updateSeason();
+
+        answerReveal.style.display = "none";
+        submitBtn.style.display = "block";
+
+        seasonSlider.disabled = false;
+        minusBtn.disabled = false;
+        plusBtn.disabled = false;
+
         loadClip();
-} else {
-    const clipCard = document.querySelector(".clip-card");
-    const resultScreen = document.getElementById("resultScreen");
-    const finalScore = document.getElementById("finalScore");
-
-    clipCard.style.display = "none";
-    resultScreen.style.display = "block";
-
-    finalScore.textContent = totalScore;
-
-    const resultColors = document.getElementById("resultColors");
-
-answers.forEach(answer => {
-    const box = document.createElement("div");
-    box.classList.add("result-color");
-
-    if (answer.points === 3) {
-        box.classList.add("correct");
-    } else if (answer.points === 2) {
-        box.classList.add("close");
     } else {
-        box.classList.add("wrong");
+        const clipCard = document.querySelector(".clip-card");
+        const resultScreen = document.getElementById("resultScreen");
+        const finalScore = document.getElementById("finalScore");
+
+        clipCard.style.display = "none";
+        resultScreen.style.display = "block";
+        finalScore.textContent = totalScore;
+
+        const resultColors = document.getElementById("resultColors");
+        resultColors.innerHTML = "";
+
+        answers.forEach(answer => {
+            const box = document.createElement("div");
+            box.classList.add("result-color");
+
+            if (answer.points === 3) {
+                box.classList.add("correct");
+            } else if (answer.points === 2) {
+                box.classList.add("close");
+            } else {
+                box.classList.add("wrong");
+            }
+
+            resultColors.appendChild(box);
+        });
+
+        const resultDetails = document.getElementById("resultDetails");
+        resultDetails.innerHTML = "";
+
+        answers.forEach((answer, index) => {
+            const row = document.createElement("div");
+            row.classList.add("result-row");
+
+            row.textContent =
+                `${index + 1}. ${formatSeason(answer.correct)} — إجابتك ${formatSeason(answer.guess)}`;
+
+            resultDetails.appendChild(row);
+        });
     }
-
-    resultColors.appendChild(box);
-});
-
-const resultDetails = document.getElementById("resultDetails");
-
-answers.forEach((answer, index) => {
-    const row = document.createElement("div");
-    row.classList.add("result-row");
-
-    row.textContent =
-        `${index + 1}. ${formatSeason(answer.correct)} — إجابتك ${formatSeason(answer.guess)}`;
-
-    resultDetails.appendChild(row);
-}); 
-
-}
-
 });
 
 const copyResultBtn = document.getElementById("copyResultBtn");
@@ -205,6 +254,36 @@ function restoreGame() {
     currentClip = savedData.currentClip;
     totalScore = savedData.totalScore;
     answers = savedData.answers;
+
+    if (savedData.awaitingNext && answers.length > 0) {
+    const lastAnswer = answers[answers.length - 1];
+
+    yourAnswer.textContent = formatSeason(lastAnswer.guess);
+    correctAnswer.textContent = formatSeason(lastAnswer.correct);
+
+    pointsEarned.textContent = `+${lastAnswer.points} نقطة`;
+
+    pointsEarned.classList.remove("correct", "close", "wrong");
+
+    if (lastAnswer.points === 3) {
+        pointsEarned.classList.add("correct");
+    } else if (lastAnswer.points === 2) {
+        pointsEarned.classList.add("close");
+    } else {
+        pointsEarned.classList.add("wrong");
+    }
+
+    answerReveal.style.display = "block";
+    submitBtn.style.display = "none";
+
+    seasonSlider.disabled = true;
+    minusBtn.disabled = true;
+    plusBtn.disabled = true;
+
+    gameMedia.pause();
+
+    return;
+}
 
     const progressItems = document.querySelectorAll(".progress-item");
 

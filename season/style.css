@@ -335,3 +335,64 @@ input[type="range"] {
     direction: ltr;
     letter-spacing: 2px;
 }
+
+
+.answer-reveal {
+    display: none;
+    margin-top: 22px;
+    padding-top: 22px;
+    border-top: 1px solid #2c3748;
+}
+
+.reveal-info {
+    text-align: right;
+    line-height: 1.8;
+}
+
+.reveal-info p {
+    color: #94a3b8;
+    font-size: 15px;
+}
+
+.reveal-info strong {
+    color: #ffffff;
+    font-size: 20px;
+    margin-right: 6px;
+}
+
+.points-earned {
+    width: fit-content;
+    margin: 18px 0;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-size: 20px;
+    font-weight: 800;
+}
+
+.points-earned.correct {
+    background: #166534;
+}
+
+.points-earned.close {
+    background: #854d0e;
+}
+
+.points-earned.wrong {
+    background: #111827;
+}
+
+.next-clip-btn {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    background: #4169e1;
+    color: white;
+    font-size: 17px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.next-clip-btn:hover {
+    opacity: 0.9;
+}
