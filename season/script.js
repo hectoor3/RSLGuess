@@ -158,6 +158,11 @@ if (points === 3) {
 
 answerReveal.style.display = "block";
 
+nextClipBtn.textContent =
+    currentClip === clips.length - 1
+        ? "النتيجة"
+        : "المقطع التالي";
+
 
 submitBtn.style.display = "none";
 seasonSlider.disabled = true;
