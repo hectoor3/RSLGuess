@@ -234,6 +234,10 @@ input[type="range"] {
     background: #eab308;
 }
 
+.progress-item.near {
+    background: #f97316;
+}
+
 .progress-item.wrong {
     background: #111827;
 }
@@ -283,6 +287,10 @@ input[type="range"] {
 
 .result-color.close {
     background: #eab308;
+}
+
+.result-color.near {
+    background: #f97316;
 }
 
 .result-color.wrong {
@@ -375,6 +383,10 @@ input[type="range"] {
 
 .points-earned.close {
     background: #854d0e;
+}
+
+.points-earned.near {
+    background: #c2410c;
 }
 
 .points-earned.wrong {

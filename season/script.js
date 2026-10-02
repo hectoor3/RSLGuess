@@ -50,7 +50,8 @@ function calculatePoints(guess, correct) {
     const difference = Math.abs(guess - correct);
 
     if (difference === 0) return 3;
-    if (difference <= 2) return 2;
+    if (difference === 1) return 2;
+    if (difference === 2) return 1;
 
     return 0;
 }
@@ -107,6 +108,8 @@ if (points === 3) {
     progressItems[currentClip].classList.add("correct");
 } else if (points === 2) {
     progressItems[currentClip].classList.add("close");
+} else if (points === 1) {
+    progressItems[currentClip].classList.add("near");
 } else {
     progressItems[currentClip].classList.add("wrong");
 }
@@ -124,12 +127,14 @@ correctAnswer.textContent = formatSeason(correct);
 
 pointsEarned.textContent = `+${points} نقطة`;
 
-pointsEarned.classList.remove("correct", "close", "wrong");
+pointsEarned.classList.remove("correct", "close", "near", "wrong");
 
 if (points === 3) {
     pointsEarned.classList.add("correct");
 } else if (points === 2) {
     pointsEarned.classList.add("close");
+} else if (points === 1) {
+    pointsEarned.classList.add("near");
 } else {
     pointsEarned.classList.add("wrong");
 }
@@ -192,13 +197,15 @@ nextClipBtn.addEventListener("click", () => {
             const box = document.createElement("div");
             box.classList.add("result-color");
 
-            if (answer.points === 3) {
-                box.classList.add("correct");
-            } else if (answer.points === 2) {
-                box.classList.add("close");
-            } else {
-                box.classList.add("wrong");
-            }
+           if (answer.points === 3) {
+    box.classList.add("correct");
+} else if (answer.points === 2) {
+    box.classList.add("close");
+} else if (answer.points === 1) {
+    box.classList.add("near");
+} else {
+    box.classList.add("wrong");
+}
 
             resultColors.appendChild(box);
         });
@@ -221,11 +228,12 @@ nextClipBtn.addEventListener("click", () => {
 const copyResultBtn = document.getElementById("copyResultBtn");
 
 copyResultBtn.addEventListener("click", async () => {
-    const resultSquares = answers.map(answer => {
-        if (answer.points === 3) return "🟩";
-        if (answer.points === 2) return "🟨";
-        return "⬛";
-    }).join("");
+   const resultSquares = answers.map(answer => {
+    if (answer.points === 3) return "🟩";
+    if (answer.points === 2) return "🟨";
+    if (answer.points === 1) return "🟧";
+    return "⬛";
+}).join("");
 
    const shareText =
 `أي موسم؟ #${challengeNumber}
@@ -263,15 +271,17 @@ function restoreGame() {
 
     pointsEarned.textContent = `+${lastAnswer.points} نقطة`;
 
-    pointsEarned.classList.remove("correct", "close", "wrong");
+    pointsEarned.classList.remove("correct", "close", "near", "wrong");
 
-    if (lastAnswer.points === 3) {
-        pointsEarned.classList.add("correct");
-    } else if (lastAnswer.points === 2) {
-        pointsEarned.classList.add("close");
-    } else {
-        pointsEarned.classList.add("wrong");
-    }
+if (lastAnswer.points === 3) {
+    pointsEarned.classList.add("correct");
+} else if (lastAnswer.points === 2) {
+    pointsEarned.classList.add("close");
+} else if (lastAnswer.points === 1) {
+    pointsEarned.classList.add("near");
+} else {
+    pointsEarned.classList.add("wrong");
+}
 
     answerReveal.style.display = "block";
     submitBtn.style.display = "none";
@@ -320,12 +330,14 @@ if (currentClip < clips.length) {
         box.classList.add("result-color");
 
         if (answer.points === 3) {
-            box.classList.add("correct");
-        } else if (answer.points === 2) {
-            box.classList.add("close");
-        } else {
-            box.classList.add("wrong");
-        }
+    box.classList.add("correct");
+} else if (answer.points === 2) {
+    box.classList.add("close");
+} else if (answer.points === 1) {
+    box.classList.add("near");
+} else {
+    box.classList.add("wrong");
+}
 
         resultColors.appendChild(box);
 
