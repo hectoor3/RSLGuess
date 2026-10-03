@@ -43,5 +43,75 @@ const dailyClips = {
             media: "media/day2-4.mp4",
             season: 2011
         }
+    ],
+
+ 3: [
+        {
+            id: 1,
+            media: "media/day3-1.mp4",
+            season: 2012
+        },
+        {
+            id: 2,
+            media: "media/day3-2.mp4",
+            season: 2017
+        },
+        {
+            id: 3,
+            media: "media/day3-3.mp4",
+            season: 2021
+        },
+        {
+            id: 4,
+            media: "media/day3-4.mp4",
+            season: 2013
+        }
+    ],
+
+    4: [
+        {
+            id: 1,
+            media: "media/day4-1.mp4",
+            season: 2013
+        },
+        {
+            id: 2,
+            media: "media/day4-2.mp4",
+            season: 2015
+        },
+        {
+            id: 3,
+            media: "media/day4-3.mp4",
+            season: 2017
+        },
+        {
+            id: 4,
+            media: "media/day4-4.mp4",
+            season: 2014
+        }
+    ],
+
+    5: [
+        {
+            id: 1,
+            media: "media/day5-1.mp4",
+            season: 2017
+        },
+        {
+            id: 2,
+            media: "media/day5-2.mp4",
+            season: 2015
+        },
+        {
+            id: 3,
+            media: "media/day5-3.mp4",
+            season: 2012
+        },
+        {
+            id: 4,
+            media: "media/day5-4.mp4",
+            season: 2014
+        }
     ]
+
 };
