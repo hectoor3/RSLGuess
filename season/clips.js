@@ -135,6 +135,29 @@ const dailyClips = {
             media: "media/day6-4.mp4",
             season: 2026
         }
+    ],
+
+ 7: [
+        {
+            id: 1,
+            media: "media/day7-1.mp4",
+            season: 2014
+        },
+        {
+            id: 2,
+            media: "media/day7-2.mp4",
+            season: 2008
+        },
+        {
+            id: 3,
+            media: "media/day7-3.mp4",
+            season: 2015
+        },
+        {
+            id: 4,
+            media: "media/day7-4.mp4",
+            season: 2015
+        }
     ]
 
 };
