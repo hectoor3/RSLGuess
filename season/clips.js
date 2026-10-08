@@ -158,6 +158,30 @@ const dailyClips = {
             media: "media/day7-4.mp4",
             season: 2015
         }
+    ],
+
+8: [
+        {
+            id: 1,
+            media: "media/day8-1.mp4",
+            season: 2012
+        },
+        {
+            id: 2,
+            media: "media/day8-2.mp4",
+            season: 2019
+        },
+        {
+            id: 3,
+            media: "media/day8-3.mp4",
+            season: 2013
+        },
+        {
+            id: 4,
+            media: "media/day8-4.mp4",
+            season: 2016
+        }
     ]
+
 
 };
