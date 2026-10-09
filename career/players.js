@@ -152,9 +152,12 @@ const careerPlayers = [
         aliases: ["الجاسم", "Taisir Al Jassim"],
         clubs: [
             "ahli.png",
+            "gharafa.png",
+            "ahli.png",
             "qatar-sc.png",
             "ahli.png",
             "wahda-saudi.png",
+            "ahli.png",
             "nassr-kuwait.png"
         ]
     },
@@ -215,10 +218,7 @@ const careerPlayers = [
             "qadsia.png",
             "shoulla.png",
             "jeddah.png",
-            "tai.png",
-            "jubail.png",
-            "hedaya.png",
-            "wadi.png"
+            "tai.png"
         ]
     },
     {
