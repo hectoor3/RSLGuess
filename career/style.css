@@ -1,0 +1,356 @@
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: #0b1120;
+    color: #f8fafc;
+    font-family: Tahoma, Arial, sans-serif;
+    direction: rtl;
+}
+
+.topbar {
+    background: #111827;
+    border-bottom: 1px solid #273244;
+    padding: 15px 20px;
+}
+
+.header-content {
+    max-width: 900px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.home-button {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    text-decoration: none;
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 10px;
+}
+
+.game-container {
+    max-width: 680px;
+    margin: 35px auto;
+    padding: 0 16px 40px;
+}
+
+.game-heading {
+    text-align: center;
+    margin-bottom: 26px;
+}
+
+.game-heading h1 {
+    margin: 0 0 10px;
+    font-size: 28px;
+}
+
+.game-heading p {
+    color: #94a3b8;
+    font-size: 14px;
+}
+
+#challengeNumber {
+    display: inline-block;
+    margin-top: 8px;
+    color: #94a3b8;
+    font-size: 13px;
+}
+
+.career-card {
+    background: #111827;
+    border: 1px solid #293548;
+    border-radius: 16px;
+    padding: 24px 14px;
+    margin-bottom: 20px;
+}
+
+.career-path {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    direction: rtl;
+}
+
+.club-logo {
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+}
+
+.career-arrow {
+    color: #64748b;
+    font-size: 24px;
+    flex-shrink: 0;
+}
+
+.game-status {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    background: #111827;
+    padding: 18px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.score strong {
+    color: #22c55e;
+    font-size: 22px;
+}
+
+.guess-section {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#playerInput {
+    width: 100%;
+    background: #111827;
+    border: 1px solid #334155;
+    border-radius: 10px;
+    padding: 15px;
+    color: white;
+    font-size: 16px;
+    outline: none;
+}
+
+#playerInput:focus {
+    border-color: #38bdf8;
+}
+
+.suggestions {
+    display: none;
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 10px;
+    max-height: 220px;
+    overflow-y: auto;
+}
+
+.suggestion-item {
+    padding: 12px;
+    cursor: pointer;
+    border-bottom: 1px solid #334155;
+}
+
+.suggestion-item:hover {
+    background: #334155;
+}
+
+#guessBtn,
+#shareBtn {
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 14px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#guessBtn:hover,
+#shareBtn:hover {
+    background: #1d4ed8;
+}
+
+#guessBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.guess-history {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 20px;
+}
+
+.guess-item {
+    padding: 9px 16px;
+    background: #7f1d1d;
+    border: 1px solid #ef4444;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 13px;
+}
+
+.result-card {
+    margin-top: 24px;
+    padding: 24px;
+    text-align: center;
+    background: #111827;
+    border: 1px solid #334155;
+    border-radius: 16px;
+}
+
+.result-card[hidden] {
+    display: none;
+}
+
+.result-card h2 {
+    margin-top: 0;
+}
+
+#shareBtn {
+    margin-top: 12px;
+    width: 100%;
+}
+
+@media (max-width: 480px) {
+    .game-container {
+        margin-top: 25px;
+    }
+
+    .club-logo {
+        width: 48px;
+        height: 48px;
+    }
+
+    .career-arrow {
+        font-size: 18px;
+    }
+
+    .game-status {
+        font-size: 12px;
+        padding: 14px;
+    }
+}
+
+
+/* زر الإحصائيات */
+.stats-toolbar {
+    display: flex;
+    justify-content: center;
+    margin: 18px 0;
+}
+
+
+/* نافذة الإحصائيات */
+.stats-modal:not([hidden]) {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    padding: 16px;
+}
+
+.stats-modal[hidden] {
+    display: none;
+}
+
+.stats-box {
+    position: relative;
+    width: 100%;
+    max-width: 420px;
+    background: #1c1c1c;
+    color: white;
+    border: 1px solid #444;
+    border-radius: 16px;
+    padding: 28px 20px;
+    text-align: center;
+}
+
+.stats-box h2 {
+    margin: 0 0 24px;
+}
+
+.stats-close {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    border: none;
+    background: transparent;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 15px 5px;
+    background: #292929;
+    border-radius: 12px;
+}
+
+.stat-item strong {
+    font-size: 25px;
+}
+
+.stat-item span {
+    font-size: 12px;
+    color: #bbb;
+}
+
+@media (max-width: 400px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+
+/* أزرار الهيدر */
+.header-content {
+    position: relative;
+}
+
+
+/* زر الإحصائيات مطابق لزر الرئيسية */
+.header-content {
+    position: relative;
+}
+
+#statsBtn.header-stats-btn {
+    all: unset;
+    box-sizing: border-box;
+
+    position: absolute;
+    left: 52px;
+    top: 50%;
+    transform: translateY(-50%);
+
+    display: grid;
+    place-items: center;
+
+    width: 40px;
+    height: 40px;
+
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 10px;
+
+    font-size: 16px;
+    cursor: pointer;
+}
+
