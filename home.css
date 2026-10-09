@@ -96,3 +96,13 @@ main {
         min-height: 180px;
     }
 }
+
+
+@media (min-width: 601px) {
+    .game-card:last-child:nth-child(odd) {
+        grid-column: 1 / -1;
+        justify-self: center;
+        width: 100%;
+        max-width: 485px;
+    }
+}
