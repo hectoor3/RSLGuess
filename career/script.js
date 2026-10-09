@@ -397,3 +397,48 @@ document.addEventListener("keydown", event => {
     }
 });
 
+
+function updateCountdown() {
+    const now = new Date();
+
+    const saudiParts = new Intl.DateTimeFormat("en-US", {
+        timeZone: "Asia/Riyadh",
+        year: "numeric",
+        month: "numeric",
+        day: "numeric"
+    }).formatToParts(now);
+
+    const date = {};
+
+    saudiParts.forEach(part => {
+        if (part.type !== "literal") {
+            date[part.type] = Number(part.value);
+        }
+    });
+
+    const nextMidnight = Date.UTC(
+        date.year,
+        date.month - 1,
+        date.day + 1,
+        -3
+    );
+
+    const difference = Math.max(0, nextMidnight - now.getTime());
+
+    const hours = Math.floor(difference / 3600000);
+    const minutes = Math.floor((difference % 3600000) / 60000);
+    const seconds = Math.floor((difference % 60000) / 1000);
+
+    const countdown = [hours, minutes, seconds]
+        .map(value => String(value).padStart(2, "0"))
+        .join(":");
+
+    const element = document.getElementById("countdown");
+
+    if (element) {
+        element.textContent = countdown;
+    }
+}
+
+updateCountdown();
+setInterval(updateCountdown, 1000);

@@ -354,3 +354,24 @@ body {
     cursor: pointer;
 }
 
+
+.next-challenge {
+    margin-top: 22px;
+    text-align: center;
+}
+
+.next-challenge span {
+    display: block;
+    margin-bottom: 6px;
+    color: #777;
+    font-size: 12px;
+}
+
+.next-challenge strong {
+    direction: ltr;
+    unicode-bidi: isolate;
+    display: inline-block;
+    color: #ffffff;
+    font-size: 21px;
+    letter-spacing: 2px;
+}
