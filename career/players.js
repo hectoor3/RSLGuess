@@ -218,7 +218,10 @@ const careerPlayers = [
             "qadsia.png",
             "shoulla.png",
             "jeddah.png",
-            "tai.png"
+            "tai.png",
+            "jubail.png",
+            "hedaya.png",
+            "wadi.png"
         ]
     },
     {
