@@ -20,27 +20,33 @@ let preloadedVideo = null;
 const startSeason = 2008;
 const endSeason = 2026;
 
-const challengeStartDate = new Date("2026-10-02T00:00:00+03:00");
 
 function getChallengeNumber() {
-    const now = new Date();
+    const parts = new Intl.DateTimeFormat("en-US", {
+        timeZone: "Asia/Riyadh",
+        year: "numeric",
+        month: "numeric",
+        day: "numeric"
+    }).formatToParts(new Date());
 
-    const startDay = Date.UTC(
-        challengeStartDate.getFullYear(),
-        challengeStartDate.getMonth(),
-        challengeStartDate.getDate()
-    );
+    const date = {};
 
+    parts.forEach(part => {
+        if (part.type !== "literal") {
+            date[part.type] = Number(part.value);
+        }
+    });
+
+    const start = Date.UTC(2026, 9, 2);
     const today = Date.UTC(
-        now.getFullYear(),
-        now.getMonth(),
-        now.getDate()
+        date.year,
+        date.month - 1,
+        date.day
     );
 
-    const daysPassed = Math.floor((today - startDay) / 86400000);
-
-    return daysPassed + 1;
+    return Math.floor((today - start) / 86400000) + 1;
 }
+
 
 const challengeNumber = getChallengeNumber();
 const clips = dailyClips[challengeNumber];
