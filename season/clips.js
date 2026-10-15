@@ -299,4 +299,26 @@ const dailyClips = {
         }
     ],
 
+    14: [
+        {
+            id: 1,
+            media: "media/day14-1.mp4",
+            season: 2025
+        },
+        {
+            id: 2,
+            media: "media/day14-2.mp4",
+            season: 2021
+        },
+        {
+            id: 3,
+            media: "media/day14-3.mp4",
+            season: 2011
+        },
+        {
+            id: 4,
+            media: "media/day14-4.mp4",
+            season: 2017
+        }
+    ],
 };
