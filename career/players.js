@@ -187,7 +187,7 @@ const careerPlayers = [
         aliases: ["عطيف", "Abdullah Otayf"],
         clubs: [
             "shabab.png",
-            "academica.png",
+            "Louletano.png",
             "hilal.png",
             "ahli.png"
         ]
