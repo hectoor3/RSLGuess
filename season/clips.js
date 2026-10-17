@@ -344,4 +344,27 @@ const dailyClips = {
             season: 2013
         }
     ], 
+
+    16: [
+        {
+            id: 1,
+            media: "media/day16-1.mp4",
+            season: 2010
+        },
+        {
+            id: 2,
+            media: "media/day16-2.mp4",
+            season: 2016
+        },
+        {
+            id: 3,
+            media: "media/day16-3.mp4",
+            season: 2008
+        },
+        {
+            id: 4,
+            media: "media/day16-4.mp4",
+            season: 2014
+        }
+    ], 
 };
